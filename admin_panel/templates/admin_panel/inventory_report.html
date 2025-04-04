@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Inventory Report</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Available Produce</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Produce</th>
+                                    <th>Farmer</th>
+                                    <th>Hub</th>
+                                    <th>Grade</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produce in produces %}
+                                <tr>
+                                    <td>{{ produce.name }}</td>
+                                    <td>{{ produce.farmer.user.get_full_name }}</td>
+                                    <td>{{ produce.hub.name|default:"Not assigned" }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if produce.grade == 'A' %}bg-success
+                                            {% elif produce.grade == 'B' %}bg-primary
+                                            {% else %}bg-secondary
+                                            {% endif %}">
+                                            {{ produce.get_grade_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ produce.quantity }} kg</td>
+                                    <td>₹{{ produce.price_per_kg }}/kg</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Login</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Login</button>
+                    </div>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <p>Don't have an account?</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'farmer_register' %}" class="btn btn-outline-success">
+                            Register as Farmer
+                        </a>
+                        <a href="{% url 'consumer_register' %}" class="btn btn-outline-success">
+                            Register as Consumer
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <a href="{% url 'password_reset' %}" class="text-muted">Forgot password?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

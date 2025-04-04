@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Dispute Management</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Open Disputes</h5>
+                </div>
+                <div class="card-body">
+                    {% if disputes %}
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Dispute #</th>
+                                    <th>Order #</th>
+                                    <th>Raised By</th>
+                                    <th>Type</th>
+                                    <th>Raised On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dispute in disputes %}
+                                <tr>
+                                    <td>{{ dispute.id }}</td>
+                                    <td>{{ dispute.order.id }}</td>
+                                    <td>{{ dispute.raised_by.user.get_full_name }}</td>
+                                    <td>{{ dispute.get_dispute_type_display }}</td>
+                                    <td>{{ dispute.created_at|date:"d M Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'resolve_dispute' dispute.id %}" class="btn btn-sm btn-success">
+                                            Resolve
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No open disputes at the moment.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

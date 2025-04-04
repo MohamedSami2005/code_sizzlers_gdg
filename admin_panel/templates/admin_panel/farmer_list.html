@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Farmer List</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Produce</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for farmer in farmers %}
+                                <tr>
+                                    <td>{{ farmer.user.get_full_name }}</td>
+                                    <td>{{ farmer.village }}, {{ farmer.district }}</td>
+                                    <td>{{ farmer.phone }}</td>
+                                    <td>
+                                        {% if farmer.verified %}
+                                        <span class="badge bg-success">Verified</span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ farmer.produce_set.count }}</td>
+                                    <td>
+                                        <a href="{% url 'verify_farmer' farmer.id %}" class="btn btn-sm 
+                                            {% if farmer.verified %}btn-outline-warning
+                                            {% else %}btn-outline-success
+                                            {% endif %}">
+                                            {% if farmer.verified %}Unverify{% else %}Verify{% endif %}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

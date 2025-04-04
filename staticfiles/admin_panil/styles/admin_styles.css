@@ -1,0 +1,64 @@
+/* Admin Dashboard Styles */
+.dashboard-card {
+    border-radius: 8px;
+    color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.card-farmers {
+    background-color: #17a2b8;
+}
+
+.card-consumers {
+    background-color: #6f42c1;
+}
+
+.card-hubs {
+    background-color: #fd7e14;
+}
+
+.card-orders {
+    background-color: #28a745;
+}
+
+/* Admin Table Styles */
+.admin-table th {
+    background-color: #343a40;
+    color: white;
+}
+
+/* Dispute Styles */
+.dispute-card {
+    border-left: 4px solid #dc3545;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.dispute-status {
+    font-size: 0.9rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.status-open {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-in-progress {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-resolved {
+    background-color: #28a745;
+    color: white;
+}

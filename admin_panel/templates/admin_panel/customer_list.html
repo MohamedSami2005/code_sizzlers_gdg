@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Consumer List</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Contact</th>
+                                    <th>Location</th>
+                                    <th>Registered On</th>
+                                    <th>Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for consumer in consumers %}
+                                <tr>
+                                    <td>{{ consumer.user.get_full_name }}</td>
+                                    <td>{{ consumer.phone }}</td>
+                                    <td>{{ consumer.city }}</td>
+                                    <td>{{ consumer.user.date_joined|date:"d M Y" }}</td>
+                                    <td>{{ consumer.order_set.count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

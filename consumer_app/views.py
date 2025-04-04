@@ -7,7 +7,11 @@ from .models import Consumer, Cart, CartItem, Order
 from .forms import ConsumerRegistrationForm, CheckoutForm
 
 def marketplace(request):
-    produces = Produce.objects.filter(available=True, approved=True).order_by('-listed_at')
+    produces = Produce.objects.filter(
+        available=True, 
+        approved=True,
+        hub__isnull=False  # Only show produce assigned to hubs
+    ).select_related('farmer', 'hub').order_by('-listed_at')
     return render(request, 'consumer_app/marketplace.html', {'produces': produces})
 
 def product_detail(request, pk):

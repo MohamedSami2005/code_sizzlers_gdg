@@ -44,10 +44,10 @@
                                 <i class="bi bi-person-circle"></i> {{ user.username }}
                             </a>
                             <ul class="dropdown-menu">
-                                {% if hasattr(user, 'farmer') %}
+                                {% if user.farmer %}
                                     <li><a class="dropdown-item" href="{% url 'farmer_dashboard' %}">Dashboard</a></li>
                                     <li><a class="dropdown-item" href="{% url 'farmer_profile' %}">Profile</a></li>
-                                {% elif hasattr(user, 'consumer') %}
+                                {% elif user.consumer %}
                                     <li><a class="dropdown-item" href="{% url 'order_history' %}">My Orders</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Resolve Dispute #{{ dispute.id }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Dispute Details</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p><strong>Order #:</strong> {{ dispute.order.id }}</p>
+                            <p><strong>Raised By:</strong> {{ dispute.raised_by.user.get_full_name }}</p>
+                            <p><strong>Type:</strong> {{ dispute.get_dispute_type_display }}</p>
+                            <p><strong>Description:</strong> {{ dispute.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Submit Resolution</button>
+                        <a href="{% url 'dispute_list' %}" class="btn btn-outline-secondary">Back to Disputes</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

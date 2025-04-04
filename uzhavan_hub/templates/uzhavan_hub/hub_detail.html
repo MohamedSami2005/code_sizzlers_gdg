@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3>{{ hub.name }} Hub Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5>Location</h5>
+                            <p>{{ hub.location }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Contact</h5>
+                            <p>{{ hub.contact_number }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5>Manager</h5>
+                            <p>{{ hub.manager.get_full_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Operational Hours</h5>
+                            <p>{{ hub.operational_hours }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if hub.latitude and hub.longitude %}
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>Map Location</h5>
+                            <div class="ratio ratio-16x9">
+                                <iframe 
+                                    src="https://maps.google.com/maps?q={{ hub.latitude }},{{ hub.longitude }}&hl=es;z=14&output=embed"
+                                    allowfullscreen
+                                ></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <a href="{% url 'hub_list' %}" class="btn btn-secondary">Back to List</a>
+                        {% if request.user.is_staff %}
+                        <a href="{% url 'edit_hub' hub.id %}" class="btn btn-primary">Edit Hub</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
