@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'marketplace' %}">Marketplace</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ produce.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="card">
+                {% if produce.image %}
+                <img src="{{ produce.image.url }}" class="card-img-top" alt="{{ produce.name }}">
+                {% endif %}
+                <div class="card-body text-center">
+                    <span class="badge 
+                        {% if produce.grade == 'A' %}bg-success
+                        {% elif produce.grade == 'B' %}bg-primary
+                        {% else %}bg-secondary
+                        {% endif %} mb-2">
+                        {{ produce.get_grade_display }}
+                    </span>
+                    <h3 class="card-title">{{ produce.name }}</h3>
+                    <h4 class="text-success mb-3">₹{{ produce.price_per_kg }}/kg</h4>
+                    <p class="card-text">{{ produce.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Product Details</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Farmer</th>
+                            <td>{{ produce.farmer.user.get_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Location</th>
+                            <td>{{ produce.farmer.village }}, {{ produce.farmer.district }}</td>
+                        </tr>
+                        <tr>
+                            <th>Available Quantity</th>
+                            <td>{{ produce.quantity }} kg</td>
+                        </tr>
+                        <tr>
+                            <th>Listed On</th>
+                            <td>{{ produce.listed_at|date:"d M Y" }}</td>
+                        </tr>
+                    </table>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'add_to_cart' produce.pk %}" class="btn btn-success btn-lg">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                        </a>
+                        <a href="{% url 'marketplace' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Marketplace
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

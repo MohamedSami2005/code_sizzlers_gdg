@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Your Shopping Cart</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'marketplace' %}">Marketplace</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            {% if cart.cartitem_set.all %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart.cartitem_set.all %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ item.produce.name }}</strong>
+                                        <small class="d-block text-muted">{{ item.produce.get_grade_display }}</small>
+                                    </td>
+                                    <td>₹{{ item.produce.price_per_kg }}/kg</td>
+                                    <td>{{ item.quantity }} kg</td>
+                                    <td>₹{{ item.total_price }}</td>
+                                    <td>
+                                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-cart-x display-4 text-muted mb-3"></i>
+                    <h4>Your cart is empty</h4>
+                    <p class="text-muted">Add some fresh produce to your cart first</p>
+                    <a href="{% url 'marketplace' %}" class="btn btn-success">Browse Marketplace</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        {% for item in cart.cartitem_set.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ item.produce.name }}
+                            <span>{{ item.quantity }} kg × ₹{{ item.produce.price_per_kg }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total:</span>
+                        <span>₹{{ cart.total_amount }}</span>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg" {% if not cart.cartitem_set.all %}disabled{% endif %}>
+                            <i class="bi bi-check-circle"></i> Proceed to Checkout
+                        </a>
+                        <a href="{% url 'marketplace' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

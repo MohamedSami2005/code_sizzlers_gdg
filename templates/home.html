@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section bg-light py-5">
+    <div class="container text-center">
+        <h1 class="display-4">Welcome to Uzhavan Connect 2.0</h1>
+        <p class="lead">Direct from farm to your home - Fair prices, fresh produce</p>
+        <div class="mt-4">
+            <a href="{% url 'marketplace' %}" class="btn btn-success btn-lg me-3">
+                <i class="bi bi-cart"></i> Shop Now
+            </a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'farmer_register' %}" class="btn btn-outline-success btn-lg">
+                    <i class="bi bi-person-plus"></i> Register as Farmer
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-shop-window display-4 text-success mb-3"></i>
+                    <h3 class="card-title">Uzhavan Hubs</h3>
+                    <p class="card-text">Our grading and distribution centers ensure quality and fair pricing for both farmers and consumers.</p>
+                    <a href="{% url 'hub_list' %}" class="btn btn-outline-success">Find a Hub</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-currency-exchange display-4 text-success mb-3"></i>
+                    <h3 class="card-title">Fair Pricing</h3>
+                    <p class="card-text">AI-driven pricing suggestions ensure farmers get fair value and consumers get competitive prices.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="bi bi-truck display-4 text-success mb-3"></i>
+                    <h3 class="card-title">Quick Delivery</h3>
+                    <p class="card-text">Fresh produce delivered to your doorstep within 24 hours of harvest.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-success text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2>For Farmers</h2>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> Get fair prices for your produce</li>
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> No middlemen, more profits</li>
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> Easy bulk selling through our hubs</li>
+                </ul>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'farmer_register' %}" class="btn btn-light">Register as Farmer</a>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h2>For Consumers</h2>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> Fresh, quality-graded produce</li>
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> Transparent pricing</li>
+                    <li class="mb-2"><i class="bi bi-check-circle"></i> Support local farmers directly</li>
+                </ul>
+                <a href="{% url 'marketplace' %}" class="btn btn-light">Shop Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

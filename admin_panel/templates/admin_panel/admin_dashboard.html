@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Admin Dashboard</h2>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card dashboard-card card-farmers">
+                <div class="card-body">
+                    <h5 class="card-title">Farmers</h5>
+                    <h1 class="display-4">{{ farmers }}</h1>
+                    <a href="{% url 'farmer_list' %}" class="text-white">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card dashboard-card card-consumers">
+                <div class="card-body">
+                    <h5 class="card-title">Consumers</h5>
+                    <h1 class="display-4">{{ consumers }}</h1>
+                    <a href="{% url 'consumer_list' %}" class="text-white">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card dashboard-card card-hubs">
+                <div class="card-body">
+                    <h5 class="card-title">Hubs</h5>
+                    <h1 class="display-4">{{ hubs }}</h1>
+                    <a href="{% url 'manage_hubs' %}" class="text-white">Manage</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card dashboard-card card-orders">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Orders</h5>
+                    <h1 class="display-4">{{ pending_orders }}</h1>
+                    <a href="#" class="text-white">View Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Recent Farmers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for farmer in recent_farmers %}
+                                <tr>
+                                    <td>{{ farmer.user.get_full_name }}</td>
+                                    <td>{{ farmer.village }}</td>
+                                    <td>
+                                        {% if farmer.verified %}
+                                        <span class="badge bg-success">Verified</span>
+                                        {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Recent Disputes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dispute in recent_disputes %}
+                                <tr>
+                                    <td>{{ dispute.order.id }}</td>
+                                    <td>{{ dispute.get_dispute_type_display }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if dispute.status == 'O' %}bg-danger
+                                            {% elif dispute.status == 'I' %}bg-warning text-dark
+                                            {% else %}bg-success
+                                            {% endif %}">
+                                            {{ dispute.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No recent disputes</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

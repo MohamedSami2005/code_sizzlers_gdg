@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">Our Uzhavan Hubs</h2>
+            <p class="lead">Find your nearest hub to submit your produce</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for hub in hubs %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 hub-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h4 class="card-title">{{ hub.name }}</h4>
+                        <span class="badge bg-success">Operational</span>
+                    </div>
+                    <p class="card-text text-muted">
+                        <i class="bi bi-geo-alt"></i> {{ hub.location }}
+                    </p>
+                    <p class="card-text">
+                        <i class="bi bi-clock"></i> {{ hub.operational_hours }}
+                    </p>
+                    <p class="card-text">
+                        <i class="bi bi-telephone"></i> {{ hub.contact_number }}
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'hub_dashboard' hub.id %}" class="btn btn-outline-success">
+                            View Hub Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-info">
+                No hubs available at the moment. Please check back later.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
