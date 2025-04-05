@@ -1,31 +1,54 @@
 /* Base Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
-}
-
-.hero-section {
-    background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
-                url('/static/images/farm-background.jpg');
+    background-image: url('/static/images/1000028971-modified.jpeg');
     background-size: cover;
     background-position: center;
-    border-bottom: 1px solid #dee2e6;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    /* Fallback background color */
+    background-color: #f8f9fa;
+    /* Add a semi-transparent overlay to improve readability */
+    position: relative;
 }
 
-/* Card Styles */
+/* Add overlay pseudo-element to improve text readability */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(179, 179, 179, 0.85);
+    z-index: -1;
+}
+
+/* Update hero-section to work with the new background */
+.hero-section {
+    background: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 1rem 0;
+}
+
+/* Make cards more transparent to blend with background */
 .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
+/* Rest of your existing CSS remains the same */
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-/* Navbar Styles */
 .navbar {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background-color: rgba(40, 167, 69, 0.9) !important;
 }
 
 .navbar-brand {

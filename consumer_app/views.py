@@ -64,30 +64,40 @@ def add_to_cart(request, produce_id):
     cart, created = Cart.objects.get_or_create(consumer=consumer, is_active=True)
     
     if request.method == 'POST':
-        quantity = float(request.POST.get('quantity', 1))
-        
-        if quantity <= 0:
-            messages.error(request, 'Quantity must be greater than zero')
+        try:
+            quantity = float(request.POST.get('quantity', 1))
+            
+            if quantity <= 0:
+                messages.error(request, 'Quantity must be greater than zero')
+                return redirect('product_detail', pk=produce_id)
+            
+            if quantity > produce.quantity:
+                messages.error(request, 'Not enough quantity available')
+                return redirect('product_detail', pk=produce_id)
+            
+            # Get or create cart item
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                produce=produce,
+                defaults={'quantity': quantity}
+            )
+            
+            if not created:
+                cart_item.quantity += quantity
+                cart_item.save()
+            
+            messages.success(request, f'Added {quantity}kg of {produce.name} to cart!')
+            return redirect('view_cart')  # Make sure this redirects to the cart page
+            
+        except ValueError:
+            messages.error(request, 'Please enter a valid quantity')
             return redirect('product_detail', pk=produce_id)
-        
-        if quantity > produce.quantity:
-            messages.error(request, 'Not enough quantity available')
-            return redirect('product_detail', pk=produce_id)
-        
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            produce=produce,
-            defaults={'quantity': quantity}
-        )
-        
-        if not created:
-            cart_item.quantity += quantity
-            cart_item.save()
-        
-        messages.success(request, 'Item added to cart successfully!')
-        return redirect('view_cart')
     
-    return render(request, 'consumer_app/add_to_cart.html', {'produce': produce})
+    # If GET request, show the add to cart form
+    return render(request, 'consumer_app/add_to_cart.html', {
+        'produce': produce,
+        'max_quantity': produce.quantity
+    })
 
 @login_required
 def remove_from_cart(request, item_id):
