@@ -11,7 +11,39 @@
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    
+                    {# Manual form rendering to ensure hub dropdown works #}
+                    <div class="mb-3">
+                        {{ form.name|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.category|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.quantity|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.grade|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.price_per_kg|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.image|as_crispy_field }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.hub.id_for_label }}" class="form-label">Hub*</label>
+                        <select name="{{ form.hub.name }}" class="form-select" required id="{{ form.hub.id_for_label }}">
+                            <option value="">Select a Hub</option>
+                            {% for hub in form.hub.field.queryset %}
+                                <option value="{{ hub.id }}">{{ hub.name }} ({{ hub.location }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success">Submit Produce</button>
                         <a href="{% url 'farmer_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>

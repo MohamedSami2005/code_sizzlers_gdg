@@ -2,20 +2,32 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from uzhavan_hub.models import Produce
+from uzhavan_hub.models import UzhavanHub, Produce
 from .models import Consumer, Cart, CartItem, Order
 from .forms import ConsumerRegistrationForm, CheckoutForm
 
 def marketplace(request):
+    hubs = UzhavanHub.objects.filter(
+        hub_produces__available=True
+    ).distinct()
+    
+    hub_id = request.GET.get('hub')
     produces = Produce.objects.filter(
-        available=True, 
-        approved=True,
-        hub__isnull=False  # Only show produce assigned to hubs
-    ).select_related('farmer', 'hub').order_by('-listed_at')
-    return render(request, 'consumer_app/marketplace.html', {'produces': produces})
+        available=True,
+        hub__isnull=False
+    ).select_related('farmer', 'hub')
+    
+    if hub_id:
+        produces = produces.filter(hub__id=hub_id)
+    
+    return render(request, 'consumer_app/marketplace.html', {
+        'produces': produces,
+        'hubs': hubs,
+        'selected_hub': int(hub_id) if hub_id else None
+    })
 
 def product_detail(request, pk):
-    produce = get_object_or_404(Produce, pk=pk, available=True, approved=True)
+    produce = get_object_or_404(Produce, pk=pk, available=True)
     return render(request, 'consumer_app/product_detail.html', {'produce': produce})
 
 def consumer_register(request):
@@ -47,7 +59,7 @@ def view_cart(request):
 
 @login_required
 def add_to_cart(request, produce_id):
-    produce = get_object_or_404(Produce, pk=produce_id, available=True, approved=True)
+    produce = get_object_or_404(Produce, pk=produce_id, available=True)
     consumer = get_object_or_404(Consumer, user=request.user)
     cart, created = Cart.objects.get_or_create(consumer=consumer, is_active=True)
     
@@ -96,7 +108,6 @@ def checkout(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            # Create order
             order = Order.objects.create(
                 consumer=consumer,
                 cart=cart,
@@ -104,14 +115,12 @@ def checkout(request):
                 contact_number=form.cleaned_data['contact_number'],
                 payment_method=form.cleaned_data['payment_method'],
                 total_amount=cart.total_amount(),
-                payment_status=False  # Assuming cash on delivery for now
+                payment_status=False
             )
             
-            # Mark cart as inactive
             cart.is_active = False
             cart.save()
             
-            # Update produce quantities
             for item in cart.cartitem_set.all():
                 item.produce.quantity -= item.quantity
                 if item.produce.quantity <= 0:

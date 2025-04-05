@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from uzhavan_hub.models import Produce
+from decimal import Decimal
 
 class Consumer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -35,7 +36,8 @@ class CartItem(models.Model):
         return f"{self.quantity}kg of {self.produce.name}"
 
     def total_price(self):
-        return self.quantity * self.produce.price_per_kg
+        # THE ONLY CHANGE NEEDED - Convert quantity to Decimal for multiplication
+        return float(Decimal(str(self.quantity)) * self.produce.price_per_kg)
 
 class Order(models.Model):
     ORDER_STATUS = (

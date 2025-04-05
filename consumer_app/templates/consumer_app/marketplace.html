@@ -3,53 +3,70 @@
 {% block content %}
 <div class="container">
     <div class="row mb-4">
-        <div class="col">
+        <div class="col-md-8">
             <h2 class="mb-3">Fresh Produce Marketplace</h2>
             <p class="lead">Direct from our farmer hubs to your home</p>
+        </div>
+        <div class="col-md-4">
+            <form method="get" action="{% url 'marketplace' %}" class="mb-3">
+                <select name="hub" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Hubs</option>
+                    {% for hub in hubs %}
+                    <option value="{{ hub.id }}" 
+                        {% if selected_hub == hub.id %}selected{% endif %}>
+                        {{ hub.name }} ({{ hub.location }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
         </div>
     </div>
 
     <div class="row">
         {% for produce in produces %}
-<div class="col-md-4 mb-4">
-    <div class="card h-100 product-card">
-        {% if produce.image %}
-        <img src="{{ produce.image.url }}" class="card-img-top product-image" alt="{{ produce.name }}">
-        {% endif %}
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-                <h5 class="card-title">{{ produce.name }}</h5>
-                <span class="badge 
-                    {% if produce.grade == 'A' %}bg-success
-                    {% elif produce.grade == 'B' %}bg-primary
-                    {% else %}bg-secondary
-                    {% endif %}">
-                    {{ produce.get_grade_display }}
-                </span>
-            </div>
-            <p class="card-text text-muted">
-                From {{ produce.hub.name }} Hub<br>
-                Farmer: {{ produce.farmer.user.get_full_name }}
-            </p>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">₹{{ produce.price_per_kg }}/kg</h5>
-                <small class="text-muted">{{ produce.quantity }} kg available</small>
-            </div>
-            <div class="d-grid gap-2">
-                <a href="{% url 'product_detail' produce.pk %}" class="btn btn-outline-success">
-                    View Details
-                </a>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 product-card">
+                {% if produce.image %}
+                <img src="{{ produce.image.url }}" class="card-img-top product-image" alt="{{ produce.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title">{{ produce.name }}</h5>
+                        <span class="badge 
+                            {% if produce.grade == 'A' %}bg-success
+                            {% elif produce.grade == 'B' %}bg-primary
+                            {% else %}bg-secondary
+                            {% endif %}">
+                            {{ produce.get_grade_display }}
+                        </span>
+                    </div>
+                    <p class="card-text text-muted">
+                        From {{ produce.hub.name }} Hub<br>
+                        Farmer: {{ produce.farmer.user.get_full_name }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">₹{{ produce.price_per_kg }}/kg</h5>
+                        <small class="text-muted">{{ produce.quantity }} kg available</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'product_detail' produce.pk %}" class="btn btn-outline-success">
+                            View Details
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-{% empty %}
-<div class="col">
-    <div class="alert alert-info">
-        No produce available at the moment. Please check back later.
-    </div>
-</div>
-{% endfor %}
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                {% if hubs.exists %}
+                    No produce available {% if selected_hub %}in this hub{% else %}at the moment{% endif %}.
+                {% else %}
+                    No hubs available yet. Please check back later.
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

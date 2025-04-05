@@ -148,7 +148,6 @@ class Produce(models.Model):
         upload_to='produce_images/'
     )
     available = models.BooleanField(_('Available'), default=True)
-    approved = models.BooleanField(_('Approved'), default=False)
 
     class Meta:
         verbose_name = _('Produce')
@@ -160,5 +159,4 @@ class Produce(models.Model):
 
     @property
     def total_price(self):
-        """Calculate total price for the available quantity"""
         return round(self.quantity * self.price_per_kg, 2)

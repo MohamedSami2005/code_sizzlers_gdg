@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -10,6 +11,11 @@ from .forms import (FarmerRegistrationForm, ProduceForm,
 
 def home(request):
     return render(request, 'home.html')
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+    return render(request, 'registration/logout_confirmation.html')
 
 # Farmer Views
 @login_required
@@ -63,18 +69,16 @@ def farmer_profile(request):
 
 @login_required
 def add_produce(request):
-    farmer = get_object_or_404(Farmer, user=request.user)
-    
     if request.method == 'POST':
-        form = ProduceForm(request.POST, request.FILES)
+        form = ProduceForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             produce = form.save(commit=False)
-            produce.farmer = farmer
+            produce.farmer = request.user.farmer_profile
             produce.save()
             messages.success(request, 'Produce added successfully!')
             return redirect('farmer_dashboard')
     else:
-        form = ProduceForm()
+        form = ProduceForm(user=request.user)
     
     return render(request, 'uzhavan_hub/add_produce.html', {'form': form})
 
